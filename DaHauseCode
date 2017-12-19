@@ -1,0 +1,222 @@
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Net.Sockets;
+
+namespace WebDashboard
+{
+    public partial class DaHause : System.Web.UI.Page
+    {
+        static string IP = "127.0.0.1"; static int PORT = 11000;
+        static TcpClient Client;
+        static StreamWriter Writer;
+        static StreamReader Reader;
+
+        static int Lamp; static int Raam; static double Temperatuur;
+        const int AANTALLAMPEN = 5; const int AANTALRAMEN = 2;
+        static string[] LampenStatus = new string[AANTALLAMPEN]; static string[] RamenStatus = new string[AANTALRAMEN];
+
+        static void RamenCheck(ref string[] RamenStatus)
+        {
+            try
+            {
+                for (int r = 0; r < AANTALRAMEN; r++)
+                {
+                    Writer.WriteLine($"Window {r}");
+                    Writer.Flush();
+                    RamenStatus[r] = Reader.ReadLine().Replace($"Window {r} is ", "");
+                }
+            }
+            catch{ }
+        }
+        static void LampenCheck(ref string[] LampenStatus)
+        {
+            try
+            {
+                for (int l = 0; l < AANTALLAMPEN; l++)
+                {
+                    Writer.WriteLine($"Lamp {l}");
+                    Writer.Flush();
+                    LampenStatus[l] = Reader.ReadLine().Replace($"Lamp {l} is ", "");
+                }
+            }
+            catch{ }
+        }
+        static void TemperatuurCheck(System.Web.UI.WebControls.TextBox txt)
+        {
+            try
+            {
+                Writer.WriteLine("Heater");
+                Writer.Flush();
+                txt.Text = Reader.ReadLine().Replace("Heater is set to ", "");
+                Temperatuur = double.Parse(txt.Text);
+            }
+            catch{ }
+        }
+
+        static void RamenChange(int Raam, ref string[] RamenStatus, System.Web.UI.WebControls.Button btn)
+        {
+            try
+            {
+                if (RamenStatus[Raam] == "Open")
+                {
+                    Writer.WriteLine($"Window {Raam} close");
+                    Writer.Flush();
+                    RamenStatus[Raam] = "Closed";
+                    btn.BackColor = Color.Red;
+                }
+                else
+                {
+                    Writer.WriteLine($"Window {Raam} open");
+                    Writer.Flush();
+                    RamenStatus[Raam] = "Open";
+                    btn.BackColor = Color.Green;
+                }
+            }
+            catch{ }
+
+        }
+        static void LampenChange(int Lamp, ref string[] LampenStatus, System.Web.UI.WebControls.Button btn)
+        {
+            try
+            {
+                if (LampenStatus[Lamp] == "Off")
+                {
+                    Writer.WriteLine($"Lamp {Lamp} on");
+                    Writer.Flush();
+                    LampenStatus[Lamp] = "On";
+                    btn.BackColor = Color.Green;
+                }
+                else if (LampenStatus[Lamp] == "On")
+                {
+                    Writer.WriteLine($"Lamp {Lamp} Off");
+                    Writer.Flush();
+                    LampenStatus[Lamp] = "Off";
+                    btn.BackColor = Color.Red;
+                }
+            }
+            catch{ }
+
+        }
+        static void ButtonChange(System.Web.UI.WebControls.Button btn, string[] Status, int i)
+        {
+            try
+            {
+                if (Status[i] == "On" || Status[i] == "Open")
+                {
+                    btn.BackColor = Color.Green;
+                }
+                else
+                {
+                    btn.BackColor = Color.Red;
+                }
+            }
+            catch { }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+
+                Client = new TcpClient(IP, PORT);
+                Writer = new StreamWriter(Client.GetStream());
+                Reader = new StreamReader(Client.GetStream());
+
+                TemperatuurCheck(txtHeater);
+                LampenCheck(ref LampenStatus);
+                RamenCheck(ref RamenStatus);
+                ButtonChange(btnLamp0, LampenStatus, 0);
+                ButtonChange(btnLamp1, LampenStatus, 1);
+                ButtonChange(btnLamp2, LampenStatus, 2);
+                ButtonChange(btnLamp3, LampenStatus, 3);
+                ButtonChange(btnLamp4, LampenStatus, 4);
+                ButtonChange(btnRaam0, RamenStatus, 0);
+                ButtonChange(btnRaam1, RamenStatus, 1);
+            }
+    
+        }
+
+        #region"Lampen"
+        protected void btnLamp0_Click(object sender, EventArgs e)
+        {
+            Lamp = 0;
+            LampenChange(Lamp, ref LampenStatus, btnLamp0);
+        }
+
+        protected void btnLamp1_Click(object sender, EventArgs e)
+        {
+            Lamp = 1;
+            LampenChange(Lamp, ref LampenStatus, btnLamp1);
+        }
+
+        protected void btnLamp2_Click(object sender, EventArgs e)
+        {
+            Lamp = 2;
+            LampenChange(Lamp, ref LampenStatus, btnLamp2);
+        }
+
+        protected void btnLamp3_Click(object sender, EventArgs e)
+        {
+            Lamp = 3;
+            LampenChange(Lamp, ref LampenStatus, btnLamp3);
+        }
+
+        protected void btnLamp4_Click(object sender, EventArgs e)
+        {
+            Lamp = 4;
+            LampenChange(Lamp, ref LampenStatus, btnLamp4);
+        }
+        #endregion"Lampen"
+
+        #region"Ramen"
+        protected void btnRaam0_Click(object sender, EventArgs e)
+        {
+            Raam = 0;
+            RamenChange(Raam, ref RamenStatus, btnRaam0);
+        }
+
+        protected void btnRaam1_Click(object sender, EventArgs e)
+        {
+            Raam = 1;
+            RamenChange(Raam, ref RamenStatus, btnRaam1);
+        }
+        #endregion"Ramen"
+
+        protected void btnHeater_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Temperatuur = double.Parse(txtHeater.Text.Replace(",", "."));
+            }
+            catch
+            {
+                lblFoutmelding.Text = "Voer een getal in";
+            }
+            finally
+            {
+                if (Temperatuur < 12) { Temperatuur = 12; }
+                if (Temperatuur > 35) { Temperatuur = 35; }
+            }
+            try
+            {
+                Writer.WriteLine($"Heater {Temperatuur}");
+                Writer.Flush();
+                txtHeater.Text = Temperatuur.ToString();
+            }
+            catch{ }
+        }
+
+        protected void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Writer.WriteLine("exit");
+                Writer.Flush();
+            }
+            finally { Server.Transfer("Dashboard.aspx", true); }
+
+        }
+    }
+}
