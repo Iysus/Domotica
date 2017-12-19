@@ -1,0 +1,133 @@
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="DaHaus.aspx.cs" Inherits="WebDashboard.DaHause" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .auto-style1 {
+            height: 23px;
+        }
+        </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table class="DaHaus">
+        <tr>
+            <td colspan="4" style="text-align:center;">Lampen</td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td>
+                <asp:Label ID="lblLamp0" runat="server" Text="Lamp 0"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnLamp0" runat="server" OnClick="btnLamp0_Click" Width="100%" />
+            </td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td>
+                <asp:Label ID="lblLamp1" runat="server" Text="Lamp 1"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnLamp1" runat="server" OnClick="btnLamp1_Click" Width="100%" />
+            </td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td>
+                <asp:Label ID="lblLamp2" runat="server" Text="Lamp 2"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnLamp2" runat="server" OnClick="btnLamp2_Click" Width="100%" />
+            </td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td>
+                <asp:Label ID="lblLamp3" runat="server" Text="Lamp 3"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnLamp3" runat="server" OnClick="btnLamp3_Click" Width="100%" />
+            </td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td>
+                <asp:Label ID="lblLamp4" runat="server" Text="Lamp 4"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnLamp4" runat="server" OnClick="btnLamp4_Click" Width="100%" />
+            </td>
+            <td>
+                &nbsp;</td>
+        </tr>
+    </table>
+    <table class="DaHaus">
+        <tr>
+            <td colspan="4">Ramen</td>
+        </tr>
+        <tr>
+            <td class="auto-style1">&nbsp;</td>
+            <td class="auto-style1">
+                <asp:Label ID="lblRaam0" runat="server" Text="Raam 0"></asp:Label>
+            </td>
+            <td class="auto-style1">
+                <asp:Button ID="btnRaam0" runat="server" OnClick="btnRaam0_Click" Width="100%" />
+            </td>
+            <td class="auto-style1"></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <asp:Label ID="lblRaam1" runat="server" Text="Raam 1"></asp:Label>
+            </td>
+            <td>
+                <asp:Button ID="btnRaam1" runat="server" OnClick="btnRaam1_Click" Width="100%" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <table class="DaHaus">
+        <tr>
+            <td colspan="4">Temperatuur</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <asp:Label ID="lblHeater" runat="server" Text="Heater"></asp:Label>
+            </td>
+            <td>
+                <asp:TextBox ID="txtHeater" runat="server" Width="100%"></asp:TextBox>
+            </td>
+            <td>
+                <asp:Label ID="lblFoutmelding" runat="server" ForeColor="Red"></asp:Label>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="2" style=" text-align: right;">
+                <asp:Button ID="btnHeater" runat="server" OnClick="btnHeater_Click" Text="Verander de temperatuur" Width="85%" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <table class="DaHaus">
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <asp:Button ID="btnDisconnect" runat="server" OnClick="btnDisconnect_Click" Text="Disconnect" Width="100%" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</asp:Content>
